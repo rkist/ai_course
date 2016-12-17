@@ -15,11 +15,7 @@ function p = predict(theta, X)
 %               You should set p to a vector of 0's and 1's
 %
 
-
 p = sigmoid(X*theta) >= 0.5;
-
-
-
 
 % =========================================================================
 
