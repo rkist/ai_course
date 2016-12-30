@@ -66,20 +66,32 @@ S1 = 0;
 
 XOnes = [ones(m, 1) X];
 
+YZeros = zeros(m,num_labels);
+for i = 1:m
+    YZeros(i,y(i)) = 1;
+end
+
 for i = 1:m
     selectedX = XOnes(i,:);
-    selectedY = zeros(1,num_labels);
-    selectedY(1,y(i)) = 1;
+    selectedY = YZeros(i,:);
     
-    hTheta1 = sigmoid(selectedX*Theta1');
+    z2 = selectedX*Theta1';
+    a2 = sigmoid(z2);
     
-    hTheta1Ones = [1 hTheta1];
-    hTheta2 = sigmoid(hTheta1Ones*Theta2');   
+    a2Ones = [1 a2];
+    z3 = a2Ones*Theta2';
+    a3 = sigmoid(z3);   
     
-    innerSum2J1 = -selectedY.*log(hTheta2);
-    innerSum2J2 = -(1-selectedY).*log(1-hTheta2);   
+    delta3 = a3 - selectedY;
+    delta2 = delta3*Theta2(:,2:end).*sigmoidGradient(z2);
     
-    S1 = S1 + sum(innerSum2J1 + innerSum2J2);    
+    innerSum2J1 = -selectedY.*log(a3);
+    innerSum2J2 = -(1-selectedY).*log(1-a3);   
+    
+    S1 = S1 + sum(innerSum2J1 + innerSum2J2);   
+    
+    Theta2_grad = Theta2_grad + delta3'*a2Ones;
+    Theta1_grad = Theta1_grad + delta2'*selectedX;
 end
 
 trimTheta1 = Theta1(:,2:end);
@@ -95,13 +107,16 @@ S1 = ((1/m)*S1);
 
 J = S1 + S2 + S3;
 
+Theta1Zero = [zeros(hidden_layer_size,1) trimTheta1];
+Theta2Zero = [zeros(num_labels,1) trimTheta2];
 
+Theta1_grad = ((1/m)*Theta1_grad) + ((lambda/m)*Theta1Zero);
+Theta2_grad = ((1/m)*Theta2_grad) + ((lambda/m)*Theta2Zero);
 % -------------------------------------------------------------
 
 % =========================================================================
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
