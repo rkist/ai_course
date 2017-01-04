@@ -16,6 +16,7 @@ function [error_train, error_val] = ...
 
 % Number of training examples
 m = size(X, 1);
+%n = size(X, 2);
 
 % You need to return these values correctly
 error_train = zeros(m, 1);
@@ -54,9 +55,18 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 
 
+for i = 1:m
+    Xpart = X(1:i,:);
+    ypart = y(1:i);
+    
+    theta = trainLinearReg(Xpart, ypart, lambda);
+    
+    [Jtrain, ~] = linearRegCostFunction(Xpart, ypart, theta, 0);
+    [Jval, ~] = linearRegCostFunction(Xval, yval, theta, 0);
 
-
-
+    error_train(i) = Jtrain;
+    error_val(i) = Jval;
+end
 
 
 % -------------------------------------------------------------
