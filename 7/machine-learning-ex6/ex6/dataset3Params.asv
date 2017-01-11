@@ -33,19 +33,22 @@ for i = 1:length(possibleC)
     for j = 1:length(possibleSigma)        
         candidateSigma = possibleSigma(j);
         
-        model = svmTrain(X, y, candidateC,  @(x1, x2) gaussianKernel(x1, x2, candidateSigma));      
+        model = svmTrain(X, y, candidateC, gaussianKernel, tol, max_passes);      
         
         predictions = svmPredict(model, Xval);   
         
         error = mean(double(predictions ~= yval));
         
         if error < bestError
-            bestError = error;
-            C = candidateC;
-            sigma = candidateSigma;
-        end
-    end           
+            
+ 
 end
+
+
+
+
+
+
 
 % =========================================================================
 
