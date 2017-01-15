@@ -29,10 +29,20 @@ centroids = zeros(K, n);
 for i = 1:K
     selection = (idx == i)';
     partialSum = selection * X;
-    centroids(i,:) = partialSum/sum(selection); 
+    centroids(i,:) = sum(partialSum)./sum(idx==i); 
 end
 
+
+
+
+
+
+
+
+
+
 % =============================================================
+
 
 end
 
