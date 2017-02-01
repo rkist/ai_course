@@ -8,7 +8,9 @@ function [bestEpsilon bestF1] = selectThreshold(yval, pval)
 
 bestEpsilon = 0;
 bestF1 = 0;
-F1 = 0;
+%F1 = 0;
+
+%realVal = logical(yval);
 
 stepsize = (max(pval) - min(pval)) / 1000;
 for epsilon = min(pval):stepsize:max(pval)
@@ -23,16 +25,22 @@ for epsilon = min(pval):stepsize:max(pval)
     % Note: You can use predictions = (pval < epsilon) to get a binary vector
     %       of 0's and 1's of the outlier predictions
 
+    predictions = (pval < epsilon);
 
-
-
-
-
-
-
-
-
-
+    truePositives = yval & predictions;
+    trueNegatives = ~yval & ~predictions;
+    falsePositives = ~yval & predictions;
+    falseNegatives = yval & ~predictions;
+    
+    tp = sum(truePositives);
+    tn = sum(trueNegatives);
+    fp = sum(falsePositives);
+    fn = sum(falseNegatives);
+    
+    prec = tp / (tp + fp);
+    rec = tp / (tp + fn);
+    
+    F1 = 2 * prec * rec / (prec + rec);
 
 
     % =============================================================

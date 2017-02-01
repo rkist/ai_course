@@ -13,7 +13,7 @@ Theta = reshape(params(num_movies*num_features+1:end), ...
 
             
 % You need to return the following values correctly
-J = 0;
+%J = 0;
 X_grad = zeros(size(X));
 Theta_grad = zeros(size(Theta));
 
@@ -40,19 +40,16 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+inDiff = (X*Theta' - Y).*R;
 
+individualJs = (inDiff.^2);
+reg1 = sum(Theta(:).^2);
+reg2 = sum(X(:).^2);
 
+J = (sum(individualJs(:)) / 2) + (lambda/2) * (reg1 + reg2);
 
-
-
-
-
-
-
-
-
-
-
+Theta_grad = (inDiff' * X) + lambda*Theta;
+X_grad = (inDiff * Theta) + lambda*X;
 
 
 % =============================================================
